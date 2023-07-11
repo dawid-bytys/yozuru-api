@@ -1,8 +1,8 @@
 import { Type } from '@sinclair/typebox';
 
-export const passwordChangeSchema = {
+export const emailChangeSchema = {
   body: Type.Object({
-    newPassword: Type.RegEx(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
+    newEmail: Type.String({ format: 'email' }),
   }),
   response: {
     200: {

@@ -69,3 +69,21 @@ export class UserNotFoundError extends CustomError {
     Object.setPrototypeOf(this, UserNotFoundError.prototype);
   }
 }
+
+export class PasswordsMatchError extends CustomError {
+  statusCode = 409;
+
+  constructor() {
+    super('New password cannot be the same as the old one.');
+    Object.setPrototypeOf(this, PasswordsMatchError.prototype);
+  }
+}
+
+export class EmailsMatchError extends CustomError {
+  statusCode = 409;
+
+  constructor() {
+    super('New e-mail cannot be the same as the old one.');
+    Object.setPrototypeOf(this, EmailsMatchError.prototype);
+  }
+}

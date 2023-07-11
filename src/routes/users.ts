@@ -1,8 +1,15 @@
 import { createUser } from '@/domain/users/createUser';
 import { getUserById } from '@/domain/users/getUser';
+import { updateEmail } from '@/domain/users/updateEmail';
 import { updatePassword } from '@/domain/users/updatePassword';
-import { InvalidPasswordError, UserNotFoundError } from '@/errors';
+import {
+  EmailsMatchError,
+  InvalidPasswordError,
+  PasswordsMatchError,
+  UserNotFoundError,
+} from '@/errors';
 import { authHandler } from '@/handlers/authHandler';
+import { emailChangeSchema } from '@/schemas/users/emailChangeSchema';
 import { passwordChangeSchema } from '@/schemas/users/passwordChangeSchema';
 import { userRegisterSchema } from '@/schemas/users/userRegisterSchema';
 import { comparePasswords } from '@/utils';
@@ -36,11 +43,11 @@ export function usersRoute(deps: Dependencies) {
       schema: passwordChangeSchema,
       handler: async (request, reply) => {
         const userId = request.userId();
-        const { oldPassword, newPassword } = request.body;
+        const { newPassword } = request.body;
 
         const user = await getUserById(prisma)(userId);
-        if (!comparePasswords(oldPassword, user.password)) {
-          throw new InvalidPasswordError();
+        if (comparePasswords(newPassword, user.password)) {
+          throw new PasswordsMatchError();
         }
 
         await updatePassword(prisma)(userId, newPassword);
@@ -48,6 +55,29 @@ export function usersRoute(deps: Dependencies) {
         return reply.code(204).send({
           success: true,
           message: 'Your password has been successfully changed.',
+        });
+      },
+    });
+
+    app.withTypeProvider<TypeBoxTypeProvider>().route({
+      method: 'PATCH',
+      url: '/users/me/email',
+      preHandler: authHandler(),
+      schema: emailChangeSchema,
+      handler: async (request, reply) => {
+        const userId = request.userId();
+        const { newEmail } = request.body;
+
+        const user = await getUserById(prisma)(userId);
+        if (user.email === newEmail) {
+          throw new EmailsMatchError();
+        }
+
+        await updateEmail(prisma)(userId, newEmail);
+
+        return reply.code(204).send({
+          success: true,
+          message: 'Your e-mail has been successfully changed.',
         });
       },
     });

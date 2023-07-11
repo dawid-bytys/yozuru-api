@@ -5,7 +5,7 @@ import { bootstrapDependencies } from '@/dependencies';
 import { createServer } from '@/server';
 import type { FastifyInstance } from 'fastify';
 
-describe('PATCH /users/me/password', () => {
+describe('PATCH /users/me/email', () => {
   let app: FastifyInstance;
   let accessToken: string;
 
@@ -38,31 +38,31 @@ describe('PATCH /users/me/password', () => {
     accessToken = loginResponse.cookies[0]!.value;
   });
 
-  it('should return 204 - password changed successfully', async () => {
+  it('should return 204 - email changed successfully', async () => {
     const response = await app.inject({
       method: 'PATCH',
-      url: `${USERS_ENDPOINT}/me/password`,
+      url: `${USERS_ENDPOINT}/me/email`,
       cookies: {
         accessToken,
       },
       payload: {
-        newPassword: 'Newtestpassword123!',
+        newEmail: 'newmail@gmail.com',
       },
     });
 
     assert.equal(response.statusCode, 204);
     assert.deepEqual(response.json(), {
       success: true,
-      message: 'Your password has been successfully changed.',
+      message: 'Your e-mail has been successfully changed.',
     });
   });
 
   it('should return 401 - unauthorized', async () => {
     const response = await app.inject({
       method: 'PATCH',
-      url: `${USERS_ENDPOINT}/me/password`,
+      url: `${USERS_ENDPOINT}/me/email`,
       payload: {
-        newPassword: 'Newtestpassword123!',
+        newEmail: 'newmail@gmail.com',
       },
     });
 
@@ -73,22 +73,22 @@ describe('PATCH /users/me/password', () => {
     });
   });
 
-  it('should return 409 - passwords are the same', async () => {
+  it('should return 409 - e-mails are the same', async () => {
     const response = await app.inject({
       method: 'PATCH',
-      url: `${USERS_ENDPOINT}/me/password`,
+      url: `${USERS_ENDPOINT}/me/email`,
       cookies: {
         accessToken,
       },
       payload: {
-        newPassword: 'Newtestpassword123!',
+        newEmail: 'newmail@gmail.com',
       },
     });
 
     assert.equal(response.statusCode, 409);
     assert.deepEqual(response.json(), {
       success: false,
-      message: 'New password cannot be the same as the old one.',
+      message: 'New e-mail cannot be the same as the old one.',
     });
   });
 });
