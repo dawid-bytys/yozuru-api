@@ -21,7 +21,7 @@ describe('POST /users', () => {
       payload: {
         username: 'testusername',
         email: 'test@gmail.com',
-        password: 'testpassword',
+        password: 'Testpassword123!',
         firstName: 'testfirstname',
         lastName: 'testlastname',
       },
@@ -41,7 +41,7 @@ describe('POST /users', () => {
       payload: {
         username: 'testusername',
         email: 'test1@gmail.com',
-        password: 'testpassword',
+        password: 'Testpassword123!',
         firstName: 'testfirstname',
         lastName: 'testlastname',
       },
@@ -61,7 +61,7 @@ describe('POST /users', () => {
       payload: {
         username: 'testusername1',
         email: 'test@gmail.com',
-        password: 'testpassword',
+        password: 'Testpassword123!',
         firstName: 'testfirstname',
         lastName: 'testlastname',
       },
@@ -81,7 +81,7 @@ describe('POST /users', () => {
       payload: {
         username: 'test',
         email: 'test2@gmail.com',
-        password: 'testpassword',
+        password: 'Testpassword123!',
         firstName: 'testfirstname',
         lastName: 'testlastname',
       },
@@ -97,7 +97,7 @@ describe('POST /users', () => {
       payload: {
         username: 'test',
         email: 'test2gmail.com',
-        password: 'testpassword',
+        password: 'Testpassword123!',
         firstName: 'testfirstname',
         lastName: 'testlastname',
       },
@@ -113,7 +113,7 @@ describe('POST /users', () => {
       payload: {
         username: 'test',
         email: 'test2@gmail.com',
-        password: 'testpassword',
+        password: 'Testpassword123!',
         firstName: 't',
         lastName: 'testlastname',
       },
@@ -129,7 +129,7 @@ describe('POST /users', () => {
       payload: {
         username: 'test',
         email: 'test2@gmail.com',
-        password: 'testpassword',
+        password: 'Testpassword123!',
         firstName: 'testfirstname',
         lastName: 't',
       },

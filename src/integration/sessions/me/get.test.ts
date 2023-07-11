@@ -20,7 +20,7 @@ describe('GET /sessions/me', () => {
       payload: {
         username: 'testusername',
         email: 'test@gmail.com',
-        password: 'testpassword',
+        password: 'Testpassword123!',
         firstName: 'testfirstname',
         lastName: 'testlastname',
       },
@@ -31,7 +31,7 @@ describe('GET /sessions/me', () => {
       url: SESSIONS_ENDPOINT,
       payload: {
         username: 'testusername',
-        password: 'testpassword',
+        password: 'Testpassword123!',
       },
     });
 

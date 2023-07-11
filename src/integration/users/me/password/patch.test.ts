@@ -1,12 +1,13 @@
 import { assert } from 'chai';
-import { clearDatabase } from '../helpers';
+import { clearDatabase } from '../../../helpers';
 import { SESSIONS_ENDPOINT, USERS_ENDPOINT } from '@/constants';
 import { bootstrapDependencies } from '@/dependencies';
 import { createServer } from '@/server';
 import type { FastifyInstance } from 'fastify';
 
-describe('POST /sessions', () => {
+describe('PATCH /users/me/password', () => {
   let app: FastifyInstance;
+  let accessToken: string;
 
   before(async () => {
     const deps = bootstrapDependencies();
@@ -24,10 +25,8 @@ describe('POST /sessions', () => {
         lastName: 'testlastname',
       },
     });
-  });
 
-  it('should return 200 - user logged in', async () => {
-    const response = await app.inject({
+    const loginResponse = await app.inject({
       method: 'POST',
       url: SESSIONS_ENDPOINT,
       payload: {
@@ -36,45 +35,63 @@ describe('POST /sessions', () => {
       },
     });
 
-    assert.equal(response.statusCode, 200);
-    assert.equal(response.cookies[0]!.name, 'accessToken');
+    accessToken = loginResponse.cookies[0]!.value;
+  });
+
+  it('should return 204 - password changed successfully', async () => {
+    const response = await app.inject({
+      method: 'PATCH',
+      url: `${USERS_ENDPOINT}/me/password`,
+      cookies: {
+        accessToken,
+      },
+      payload: {
+        oldPassword: 'Testpassword123!',
+        newPassword: 'Newtestpassword123!',
+      },
+    });
+
+    assert.equal(response.statusCode, 204);
     assert.deepEqual(response.json(), {
       success: true,
-      message: 'You have successfully logged in.',
+      message: 'Your password has been successfully changed.',
     });
   });
 
-  it('should return 401 - invalid credentials (username)', async () => {
+  it('should return 401 - unauthorized', async () => {
     const response = await app.inject({
-      method: 'POST',
-      url: SESSIONS_ENDPOINT,
+      method: 'PATCH',
+      url: `${USERS_ENDPOINT}/me/password`,
       payload: {
-        username: 'invalidusername',
-        password: 'Testpassword123!',
+        oldPassword: 'Testpassword123!',
+        newPassword: 'Newtestpassword123!',
       },
     });
 
     assert.equal(response.statusCode, 401);
     assert.deepEqual(response.json(), {
       success: false,
-      message: 'Invalid username or password.',
+      message: 'You are not authorized to access this resource.',
     });
   });
 
-  it('should return 401 - invalid credentials (password)', async () => {
+  it('should return 403 - invalid newPassword', async () => {
     const response = await app.inject({
-      method: 'POST',
-      url: SESSIONS_ENDPOINT,
+      method: 'PATCH',
+      url: `${USERS_ENDPOINT}/me/password`,
+      cookies: {
+        accessToken,
+      },
       payload: {
-        username: 'testusername',
-        password: 'Invalidpassword123!',
+        oldPassword: 'Newtestpassword1234!',
+        newPassword: 'Newtestpassword123!',
       },
     });
 
     assert.equal(response.statusCode, 401);
     assert.deepEqual(response.json(), {
       success: false,
-      message: 'Invalid username or password.',
+      message: 'Invalid password.',
     });
   });
 });

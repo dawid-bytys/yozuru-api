@@ -1,12 +1,17 @@
+import { UserNotFoundError } from '@/errors';
 import type { PrismaClient } from '@prisma/client';
 
 export function getUserById(prismaInstance: PrismaClient) {
   return (id: string) => {
-    return prismaInstance.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      return prismaInstance.user.findUniqueOrThrow({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new UserNotFoundError();
+    }
   };
 }
 

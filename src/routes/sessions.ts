@@ -50,11 +50,7 @@ export function sessionsRoute(deps: Dependencies) {
       schema: meSchema,
       handler: async (request, reply) => {
         const userId = request.userId();
-
         const user = await getUserById(prisma)(userId);
-        if (!user) {
-          throw new UserNotFoundError();
-        }
 
         return reply.send({
           success: true,

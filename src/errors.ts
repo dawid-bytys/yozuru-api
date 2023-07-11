@@ -43,6 +43,15 @@ export class InvalidCredentialsError extends CustomError {
   }
 }
 
+export class InvalidPasswordError extends CustomError {
+  statusCode = 401;
+
+  constructor() {
+    super('Invalid password.');
+    Object.setPrototypeOf(this, InvalidCredentialsError.prototype);
+  }
+}
+
 export class NotAuthorizedError extends CustomError {
   statusCode = 401;
 
