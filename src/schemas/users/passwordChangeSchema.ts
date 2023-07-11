@@ -5,7 +5,7 @@ export const passwordChangeSchema = {
     newPassword: Type.RegEx(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/),
   }),
   response: {
-    200: {
+    204: {
       success: Type.Boolean(),
       message: Type.String(),
     },

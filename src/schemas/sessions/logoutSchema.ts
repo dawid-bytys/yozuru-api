@@ -1,11 +1,8 @@
 import { Type } from '@sinclair/typebox';
 
-export const emailChangeSchema = {
-  body: Type.Object({
-    newEmail: Type.String({ format: 'email' }),
-  }),
+export const logoutSchema = {
   response: {
-    204: {
+    205: {
       success: Type.Boolean(),
       message: Type.String(),
     },

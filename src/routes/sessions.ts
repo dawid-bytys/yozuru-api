@@ -3,6 +3,7 @@ import { getUserById, getUserByUsername } from '@/domain/users/getUser';
 import { mapUserToDto } from '@/dto-mappers/user';
 import { InvalidCredentialsError, UserNotFoundError } from '@/errors';
 import { authHandler } from '@/handlers/authHandler';
+import { logoutSchema } from '@/schemas/sessions/logoutSchema';
 import { meSchema } from '@/schemas/sessions/meSchema';
 import { userLoginSchema } from '@/schemas/users/userLoginSchema';
 import { comparePasswords, generateAccessToken } from '@/utils';
@@ -56,6 +57,24 @@ export function sessionsRoute(deps: Dependencies) {
           success: true,
           data: mapUserToDto(user),
         });
+      },
+    });
+
+    app.withTypeProvider<TypeBoxTypeProvider>().route({
+      method: 'DELETE',
+      url: '/sessions/me',
+      preHandler: authHandler(),
+      schema: logoutSchema,
+      handler: (_request, reply) => {
+        return reply
+          .setCookie('accessToken', '', {
+            path: '/',
+          })
+          .code(205)
+          .send({
+            success: true,
+            message: 'You have successfully logged out.',
+          });
       },
     });
   };
