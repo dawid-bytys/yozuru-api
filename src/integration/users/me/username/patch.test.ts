@@ -5,7 +5,7 @@ import { bootstrapDependencies } from '@/dependencies';
 import { createServer } from '@/server';
 import type { FastifyInstance } from 'fastify';
 
-describe('PATCH /users/me/email', () => {
+describe('PATCH /users/me/username', () => {
   let app: FastifyInstance;
   let accessToken: string;
 
@@ -50,31 +50,31 @@ describe('PATCH /users/me/email', () => {
     accessToken = loginResponse.cookies[0]!.value;
   });
 
-  it('should return 204 - email changed successfully', async () => {
+  it('should return 204 - username changed successfully', async () => {
     const response = await app.inject({
       method: 'PATCH',
-      url: `${USERS_ENDPOINT}/me/email`,
+      url: `${USERS_ENDPOINT}/me/username`,
       cookies: {
         accessToken,
       },
       payload: {
-        newEmail: 'newmail@gmail.com',
+        newUsername: 'newtestusername',
       },
     });
 
     assert.equal(response.statusCode, 204);
     assert.deepEqual(response.json(), {
       success: true,
-      message: 'Your e-mail has been successfully changed.',
+      message: 'Your username has been successfully changed.',
     });
   });
 
   it('should return 401 - unauthorized', async () => {
     const response = await app.inject({
       method: 'PATCH',
-      url: `${USERS_ENDPOINT}/me/email`,
+      url: `${USERS_ENDPOINT}/me/username`,
       payload: {
-        newEmail: 'newmail@gmail.com',
+        newUsername: 'newtestusername',
       },
     });
 
@@ -85,41 +85,41 @@ describe('PATCH /users/me/email', () => {
     });
   });
 
-  it('should return 409 - e-mails are the same', async () => {
+  it('should return 409 - usernames are the same', async () => {
     const response = await app.inject({
       method: 'PATCH',
-      url: `${USERS_ENDPOINT}/me/email`,
+      url: `${USERS_ENDPOINT}/me/username`,
       cookies: {
         accessToken,
       },
       payload: {
-        newEmail: 'newmail@gmail.com',
+        newUsername: 'newtestusername',
       },
     });
 
     assert.equal(response.statusCode, 409);
     assert.deepEqual(response.json(), {
       success: false,
-      message: 'New email cannot be the same as the old one.',
+      message: 'New username cannot be the same as the old one.',
     });
   });
 
-  it('should return 409 - e-mail is already in use', async () => {
+  it('should return 409 - username is already in use', async () => {
     const response = await app.inject({
       method: 'PATCH',
-      url: `${USERS_ENDPOINT}/me/email`,
+      url: `${USERS_ENDPOINT}/me/username`,
       cookies: {
         accessToken,
       },
       payload: {
-        newEmail: 'test1@gmail.com',
+        newUsername: 'testusername1',
       },
     });
 
     assert.equal(response.statusCode, 409);
     assert.deepEqual(response.json(), {
       success: false,
-      message: 'Provided email is already in use.',
+      message: 'Provided username is already in use.',
     });
   });
 });

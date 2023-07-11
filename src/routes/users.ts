@@ -2,18 +2,14 @@ import { createUser } from '@/domain/users/createUser';
 import { getUserById } from '@/domain/users/getUser';
 import { updateEmail } from '@/domain/users/updateEmail';
 import { updatePassword } from '@/domain/users/updatePassword';
-import {
-  EmailsMatchError,
-  InvalidPasswordError,
-  PasswordsMatchError,
-  UserNotFoundError,
-} from '@/errors';
+import { updateUsername } from '@/domain/users/updateUsername';
+import { FieldsMatchError } from '@/errors';
 import { authHandler } from '@/handlers/authHandler';
 import { emailChangeSchema } from '@/schemas/users/emailChangeSchema';
 import { passwordChangeSchema } from '@/schemas/users/passwordChangeSchema';
 import { userRegisterSchema } from '@/schemas/users/userRegisterSchema';
+import { usernameChangeSchema } from '@/schemas/users/usernameChangeSchema';
 import { comparePasswords } from '@/utils';
-import { get } from 'http';
 import type { Dependencies } from '@/types';
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import type { FastifyInstance } from 'fastify';
@@ -47,7 +43,7 @@ export function usersRoute(deps: Dependencies) {
 
         const user = await getUserById(prisma)(userId);
         if (comparePasswords(newPassword, user.password)) {
-          throw new PasswordsMatchError();
+          throw new FieldsMatchError('password');
         }
 
         await updatePassword(prisma)(userId, newPassword);
@@ -70,7 +66,7 @@ export function usersRoute(deps: Dependencies) {
 
         const user = await getUserById(prisma)(userId);
         if (user.email === newEmail) {
-          throw new EmailsMatchError();
+          throw new FieldsMatchError('email');
         }
 
         await updateEmail(prisma)(userId, newEmail);
@@ -78,6 +74,29 @@ export function usersRoute(deps: Dependencies) {
         return reply.code(204).send({
           success: true,
           message: 'Your e-mail has been successfully changed.',
+        });
+      },
+    });
+
+    app.withTypeProvider<TypeBoxTypeProvider>().route({
+      method: 'PATCH',
+      url: '/users/me/username',
+      preHandler: authHandler(),
+      schema: usernameChangeSchema,
+      handler: async (request, reply) => {
+        const userId = request.userId();
+        const { newUsername } = request.body;
+
+        const user = await getUserById(prisma)(userId);
+        if (user.username === newUsername) {
+          throw new FieldsMatchError('username');
+        }
+
+        await updateUsername(prisma)(userId, newUsername);
+
+        return reply.code(204).send({
+          success: true,
+          message: 'Your username has been successfully changed.',
         });
       },
     });

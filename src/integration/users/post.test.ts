@@ -50,7 +50,7 @@ describe('POST /users', () => {
     assert.equal(response.statusCode, 409);
     assert.deepEqual(response.json(), {
       success: false,
-      message: 'User with this username already exists.',
+      message: 'Provided username is already in use.',
     });
   });
 
@@ -70,7 +70,7 @@ describe('POST /users', () => {
     assert.equal(response.statusCode, 409);
     assert.deepEqual(response.json(), {
       success: false,
-      message: 'User with this email already exists.',
+      message: 'Provided email is already in use.',
     });
   });
 

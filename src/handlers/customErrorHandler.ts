@@ -8,9 +8,7 @@ export function setupCustomErrorHandler(app: FastifyInstance) {
       switch (err.code) {
         case 'P2002':
           const constraint = (err.meta!.target as string[])[0] as string;
-          return reply
-            .code(409)
-            .send(errorResponse(`User with this ${constraint} already exists.`));
+          return reply.code(409).send(errorResponse(`Provided ${constraint} is already in use.`));
         default:
           return reply.code(500).send(errorResponse(err.message));
       }

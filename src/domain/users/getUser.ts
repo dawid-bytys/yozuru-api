@@ -9,7 +9,7 @@ export function getUserById(prismaInstance: PrismaClient) {
           id,
         },
       });
-    } catch (error) {
+    } catch (_err) {
       throw new UserNotFoundError();
     }
   };
