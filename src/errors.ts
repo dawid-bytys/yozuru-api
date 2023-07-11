@@ -33,3 +33,12 @@ export class UniqueConstraintError extends CustomError {
     Object.setPrototypeOf(this, UniqueConstraintError.prototype);
   }
 }
+
+export class InvalidCredentialsError extends CustomError {
+  statusCode = 401;
+
+  constructor() {
+    super('Invalid username or password.');
+    Object.setPrototypeOf(this, InvalidCredentialsError.prototype);
+  }
+}

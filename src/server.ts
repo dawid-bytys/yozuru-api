@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import { setupCustomErrorHandler } from './handlers/customErrorHandler';
+import { setupPlugins } from './registers/plugins';
 import { setupRoutes } from './registers/routes';
 import { setupGracefulShutdown } from '@/registers/shutdown';
 import type { Dependencies } from '@/types';
@@ -11,8 +12,10 @@ export function createServer(deps: Dependencies) {
     const app = Fastify(opts).withTypeProvider<TypeBoxTypeProvider>();
 
     setupCustomErrorHandler(app);
-    setupGracefulShutdown(deps)(app);
-    setupRoutes(deps)(app);
+    setupGracefulShutdown(app, deps);
+
+    await setupPlugins(app);
+    await setupRoutes(app, deps);
 
     return app;
   };

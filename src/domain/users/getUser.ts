@@ -2,7 +2,7 @@ import type { PrismaClient } from '@prisma/client';
 
 export function getUserById(prismaInstance: PrismaClient) {
   return (id: string) => {
-    return prismaInstance.user.findUniqueOrThrow({
+    return prismaInstance.user.findUnique({
       where: {
         id,
       },
@@ -12,7 +12,7 @@ export function getUserById(prismaInstance: PrismaClient) {
 
 export function getUserByUsername(prismaInstance: PrismaClient) {
   return (username: string) => {
-    return prismaInstance.user.findUniqueOrThrow({
+    return prismaInstance.user.findUnique({
       where: {
         username,
       },

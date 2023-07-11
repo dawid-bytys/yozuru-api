@@ -17,15 +17,19 @@
     "compose": "docker-compose up -d"
   },
   "dependencies": {
+    "@fastify/cookie": "^8.3.0",
+    "@fastify/cors": "^8.3.0",
     "@fastify/type-provider-typebox": "^3.3.0",
     "@prisma/client": "^4.16.2",
     "@sinclair/typebox": "^0.29.4",
     "bcrypt": "^5.1.0",
-    "fastify": "^4.19.2"
+    "fastify": "^4.19.2",
+    "jsonwebtoken": "^9.0.1"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/chai": "^4.3.5",
+    "@types/jsonwebtoken": "^9.0.2",
     "@types/mocha": "^10.0.1",
     "@types/node": "^20.4.1",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
