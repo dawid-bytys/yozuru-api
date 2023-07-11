@@ -11,3 +11,9 @@ export interface RegisterCredentials {
   readonly firstName: string;
   readonly lastName: string;
 }
+
+export interface UserPayload {
+  readonly id: string;
+  readonly iat: number;
+  readonly exp: number;
+}

@@ -1,6 +1,9 @@
 import { isProd } from '@/config';
-import { getUserByUsername } from '@/domain/users/getUser';
-import { InvalidCredentialsError } from '@/errors';
+import { getUserById, getUserByUsername } from '@/domain/users/getUser';
+import { mapUserToDto } from '@/dto-mappers/user';
+import { InvalidCredentialsError, UserNotFoundError } from '@/errors';
+import { authHandler } from '@/handlers/authHandler';
+import { meSchema } from '@/schemas/sessions/meSchema';
 import { userLoginSchema } from '@/schemas/users/userLoginSchema';
 import { comparePasswords, generateAccessToken } from '@/utils';
 import type { Dependencies } from '@/types';
@@ -37,6 +40,26 @@ export function sessionsRoute(deps: Dependencies) {
             success: true,
             message: 'You have successfully logged in.',
           });
+      },
+    });
+
+    app.withTypeProvider<TypeBoxTypeProvider>().route({
+      method: 'GET',
+      url: '/sessions/me',
+      preHandler: authHandler(),
+      schema: meSchema,
+      handler: async (request, reply) => {
+        const userId = request.userId();
+
+        const user = await getUserById(prisma)(userId);
+        if (!user) {
+          throw new UserNotFoundError();
+        }
+
+        return reply.send({
+          success: true,
+          data: mapUserToDto(user),
+        });
       },
     });
   };

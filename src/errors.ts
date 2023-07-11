@@ -11,7 +11,7 @@ export class PropertyAccessError extends CustomError {
   statusCode = 403;
 
   constructor(property: string) {
-    super(`Access to the property "${property}" is not allowed here.`);
+    super(`Access to the property '${property}' is not allowed here.`);
     Object.setPrototypeOf(this, PropertyAccessError.prototype);
   }
 }
@@ -40,5 +40,23 @@ export class InvalidCredentialsError extends CustomError {
   constructor() {
     super('Invalid username or password.');
     Object.setPrototypeOf(this, InvalidCredentialsError.prototype);
+  }
+}
+
+export class NotAuthorizedError extends CustomError {
+  statusCode = 401;
+
+  constructor() {
+    super('You are not authorized to access this resource.');
+    Object.setPrototypeOf(this, NotAuthorizedError.prototype);
+  }
+}
+
+export class UserNotFoundError extends CustomError {
+  statusCode = 404;
+
+  constructor() {
+    super('User does not exist.');
+    Object.setPrototypeOf(this, UserNotFoundError.prototype);
   }
 }

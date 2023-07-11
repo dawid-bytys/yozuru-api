@@ -24,6 +24,7 @@ export function setupCustomErrorHandler(app: FastifyInstance) {
       return reply.code(403).send(errorResponse(err.message));
     }
 
-    return reply.code(500).send(errorResponse('Unexpected error has occured.'));
+    //return reply.code(500).send(errorResponse('Unexpected error has occured.'));
+    return reply.code(500).send(errorResponse(err.message));
   });
 }

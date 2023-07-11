@@ -1,6 +1,14 @@
 import type { User } from '@prisma/client';
 
-export function mapUserToDto({ id, username, email, firstName, lastName, thumbnail }: User) {
+export function mapUserToDto({
+  id,
+  username,
+  email,
+  firstName,
+  lastName,
+  thumbnail,
+  createdAt,
+}: User) {
   return {
     id,
     username,
@@ -8,5 +16,6 @@ export function mapUserToDto({ id, username, email, firstName, lastName, thumbna
     firstName,
     lastName,
     thumbnail,
+    createdAt,
   };
 }

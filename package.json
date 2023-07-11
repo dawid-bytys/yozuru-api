@@ -8,10 +8,10 @@
   "scripts": {
     "build": "tsc",
     "start": "npm run build && node dist/index.js",
-    "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
+    "dev": "ts-node-dev --respawn --transpile-only --exit-child -r tsconfig-paths/register src/index.ts",
     "lint": "eslint --ext .ts src",
-    "test:integration": "mocha -r ts-node/register -r tsconfig-paths/register src/integration/**/*.test.ts",
-    "test:unit": "mocha -r ts-node/register -r tsconfig-paths/register src/*.test.ts --exclude src/integration",
+    "test:integration": "mocha -r ts-node/register -r tsconfig-paths/register \"src/integration/**/*.test.ts\"",
+    "test:unit": "mocha -r ts-node/register -r tsconfig-paths/register \"src/**/*.test.ts\" --exclude src/integration",
     "prisma:migrate": "prisma migrate dev --name init",
     "cleanup": "rm -rf dist",
     "compose": "docker-compose up -d"
